@@ -4,8 +4,25 @@ var grouped_data;
 
 
 function loadData(map) {
-	$.getJSON("grouped.json", function(data){
-		grouped_data = data;
+	$.getJSON("simple.json", function(data){
+		const lat_lng_set = new Set()
+		$.each(data, function(){
+			const {name, latitude, longitude, avg_db} = this;
+			var color = "#004BBD";
+			if(avg_db < 20) {
+				color = "#238823"
+			} else if(avg_db < 35) {
+				color = "#007000";
+			} 
+			const pos_str = latitude+","+longitude
+			if(!lat_lng_set.has(pos_str)) {
+				lat_lng_set.add(pos_str)
+			} else {
+				return 1;
+			}
+			console.log(this);
+			MARKERS[name] = L.circleMarker([latitude, longitude], {color: color }).bindPopup(name+"<br>Decibels: "+avg_db).addTo(map);
+		});
 	});
 }
 
