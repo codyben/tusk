@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>USA Hearing Disability Map</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+	<link rel="stylesheet" href="css/style.css"/>
+	<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+	<script type="text/javascript" src="lib/jquery.js"></script>
+	<!-- <script src="js/state_outlines.json"></script> -->
+	<script src="js/hearing_geojson.js"></script>
+</head>
+<body>
+	<div id="county-map"></div>
+	<div class="scrubber">
+		<button type="button" class="animate_button btn btn-primary" onclick="animate_week()">Play</button>
+		<form>
+			<div class="form-group">
+			<label id="time_label" for="formControlRange"><label id="time_label" for="formControlRange"><div class="curr_time"><div class="day">Thursday</div><div class="granular"><div class="hour">11: </div><div class="min">15</div><div class="mer">AM</div></div></div></label></label>
+			<input type="range" min="0" class="form-control-range" id="formControlRange" list="tickmarks">
+			<datalist id="tickmarks"></datalist>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="js/drawsensors.js"></script>
+</body>
+</html>
