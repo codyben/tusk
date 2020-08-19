@@ -15,11 +15,24 @@ max_num_sounds = 0
 max_ts = None
 db_list = []
 MEDIAN = 31.63172027543478
+position_years = {}
+
 with open("annotations.json", "r") as sound_file:
     sound_dict = json.load(sound_file)
     # date_set = set()
     dates = dict()
     for sound in sound_dict.copy().values():
+        pos_str = str(sound["latitude"])+","+str(sound["longitude"])
+        yr = sound.get("year")
+        name = sound.get("name")
+        if pos_str in position_years.keys():
+            if position_years[pos_str].get(str(yr)) is None:
+                position_years[pos_str][str(yr)] = [name]
+            else:
+                position_years[pos_str][str(yr)].append(name)
+            continue
+        else:
+            position_years[pos_str] = {str(yr): [name]}
         ts = sound.get("human_ts")
         db_ = sound.get("decibels")
         if (ts is None) or (db_ is None):
@@ -51,15 +64,14 @@ with open("annotations.json", "r") as sound_file:
     print(min(db_list))
     sorted_dates = OrderedDict()
     for k,v in sorted(dates.items(), key=sort_fxn):
-        if k == "2018-01-08 08:00:00":
-            if v[0].get("decibels") is None:
-                print(v[0])
         sorted_dates[k] = v
     with open("grouped.json", "w") as group:
         json.dump(obj=sorted_dates, fp=group)
+    with open("yearmap.json", "w") as ymap:
+        json.dump(obj=position_years, fp=ymap)
     k = dates.keys()
-    with open("buggy.json", "w") as b:
-        json.dump(obj=sorted_dates["2018-01-08 08:00:00"], fp=b)
+    # with open("buggy.json", "w") as b:
+    #     json.dump(obj=sorted_dates["2018-01-08 08:00:00"], fp=b)
     print(f"Total Unique Dates: {str(len(k))}")
     print(f"Max unique sounds needed: {str(max_num_sounds)}")
     print(f"Happends here: {max_ts}")
