@@ -12,20 +12,16 @@
 	<link rel="stylesheet" href="lib/pulse/L.Icon.Pulse.css"></link>
 	<!-- <script src="js/state_outlines.json"></script> -->
 	<script src="js/hearing_geojson.js"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="css/style.css"/>
+	<script type="text/javascript" src="lib/MovingMarker.js"></script>
+	
 </head>
 <body>
 	<div id="county-map"></div>
-	<div class="scrubber">
-		<button type="button" class="animate_button btn btn-primary" onclick="animate_week()">Play</button>
-		<form>
-			<div class="form-group">
-			<label id="time_label" for="formControlRange"><label id="time_label" for="formControlRange"><div class="curr_time"><div class="day">Thursday</div><div class="granular"><div class="hour">11: </div><div class="min">15</div><div class="mer">AM</div></div></div></label></label>
-			<input type="range" min="0" class="form-control-range" id="formControlRange" list="tickmarks">
-			<datalist id="tickmarks"></datalist>
-			</div>
-		</form>
-	</div>
 	<script type="text/javascript" src="js/drawsensors.js"></script>
 </body>
 </html>
