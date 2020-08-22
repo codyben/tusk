@@ -1,7 +1,9 @@
 consistent_highlight = []
-$( document ).ready(function(){
+var curr_age_group = "young";
+var map;
+var geojson;
 	//console.log(statesData)
-  var map = L.map('county-map').setView([40.995786, -77.585395], 6);
+  map = L.map('county-map').setView([40.995786, -77.585395], 6);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/bencodyoski/ck7v6s6vf06sl1jpt9lnqpoqx/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w', {
 		maxZoom: 18,
@@ -30,7 +32,7 @@ $( document ).ready(function(){
 	info.update = function (props) {
 		console.log(props)
 		this._div.innerHTML = (props ?
-			' <h4>'+props.NAME+'</h4><b></b><br />'+props.HEARINGDATA.young+'% presumed to have a hearing disability '
+			' <h4>'+props.NAME+'</h4><b></b><br />'+props.HEARINGDATA[curr_age_group]+'% presumed to have a hearing disability '
 			:  '<h4>Coronavirus Cases (Presumptive & Confirmed)</h4><br> Hover over a state to view the % prevalence of a hearing disability');
 	};
 
@@ -76,7 +78,7 @@ $( document ).ready(function(){
 			color: 'gray',
 			dashArray: '3',
 			fillOpacity: 0.7,
-			fillColor: getColor(feature.properties.HEARINGDATA.young)
+			fillColor: getColor(feature.properties.HEARINGDATA[curr_age_group])
 		};
 	}
 
@@ -115,7 +117,6 @@ $( document ).ready(function(){
 		info.update(layer.feature.properties);
 	}
 
-	var geojson;
 
 	function resetHighlight(e) {
 		geojson.resetStyle(e.target);
@@ -134,6 +135,15 @@ $( document ).ready(function(){
 		});
 	}
 
+
+	function redrawLayers(new_age) {
+		curr_age_group = new_age;
+		geojson.removeFrom(map);
+		geojson = L.geoJson(hearingData, {
+			style: style,
+			onEachFeature: onEachFeature
+		}).addTo(map);
+	}
 	// L.geoJson(state_outlines, {
 	// 	style: s_style,
 	// }).addTo(map)
@@ -168,4 +178,3 @@ $( document ).ready(function(){
 	};
 
 	legend.addTo(map);
-});
