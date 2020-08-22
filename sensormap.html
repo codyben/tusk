@@ -22,6 +22,140 @@
 </head>
 <body>
 	<div id="county-map"></div>
+	<div class="modal fade" id="information" tabindex="-1" role="dialog" aria-labelledby="informationTitle" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h3 class="modal-title" id="information">Information</h3>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<div class="sound-pollution-discussion">
+					<h5 class="heading-break">The Invisible Pollutant: Noise</h5>
+					<div class="discussion-content">
+						<p>Noise is all around us, especially in a city. It's not a secret (especially in the working from home environment) that outside noises can get annoying, but did you know that these annoyances could adversely affect your health?</p>
+						<blockquote class="blockquote heading-break">
+							<p class="mb-0">Exposure to noise [pollution] causes adverse health effects like stress, anxiety, depression, high blood pressure, and heart disease.</p>
+							<footer class="blockquote-footer"><cite title="Source Title">National Insitutes of Health</cite></footer>
+						</blockquote>
+					</div>
+				</div>
+
+				<hr>
+				<div class="data-discussion">
+					<h5 class="heading-break">
+						The Data: 
+					</h5>
+					<div class="discussion-content">
+						<p>The sound data used in this project was obtained from <a href="https://wp.nyu.edu/sonyc/resources/">SONYC</a>. Definitely check out their work, its absolutely amazing. </p>
+						<p>For this map, we used the <a href="https://zenodo.org/record/3873076">2.20 version</a> of the SONYC dataset.</p>
+						<p>This version was chosen as it provided an easy way to spatially display the sensors and sound data.</p>
+					</div>
+					<hr>
+					<h5 class="heading-break">
+						Data Processing: 
+					</h5>
+					<div class="discussion-content">
+						<ol>
+							<li>From the SONYC data, we first began to extracting relative decibel levels, this was done by using a slightly modified script from <a href="https://stackoverflow.com/questions/13243690/decibel-values-at-specific-points-in-wav-file">this Stackoverflow question</a>.</li>
+							<li>Next, the uncompressed WAV files were batch converted to mp3 using <a href="https://www.gnu.org/software/parallel/">GNU Parallel</a> and <a href="https://ffmpeg.org/">FFMpeg</a>.</li>
+							<li>From these mp3 files, we normalized their volume using this script: <a href="https://github.com/slhck/ffmpeg-normalize">ffmpeg-normalize</a>. </li>
+							<li>Using the decibel levels calculated previously, and the normalized files, we used a penalty function to set the maximum volume the user will experience. While the penalty is in itself fairly arbitrary, it allows for greater noise variation to be heard.</li>
+						</ol>
+					</div>
+				</div>
+				<div class="form-group form-check">
+					<input type="checkbox" data-year="2016" class="form-check-input" id="2016-check">
+					<label class="form-check-label" for="exampleCheck1">2016</label>
+				</div>
+				<div class="form-group form-check">
+					<input type="checkbox" data-year="2017" class="form-check-input" id="2017-check">
+					<label class="form-check-label" for="exampleCheck1">2017</label>
+				</div>
+				<div class="form-group form-check">
+					<input type="checkbox" data-year="2018" class="form-check-input" id="2018-check">
+					<label class="form-check-label" for="exampleCheck1">2018</label>
+				</div>
+				<div class="form-group form-check">
+					<input type="checkbox" data-year="2019" class="form-check-input" id="2019-check">
+					<label class="form-check-label" for="exampleCheck1">2019</label>
+				</div>
+				 
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="modal fade" id="entry" tabindex="-1" role="dialog" aria-labelledby="entryTitle" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h3 class="modal-title" id="entryTitle">Setup</h3>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<div class="marker-explain">
+					<h4>Explanations</h4>
+					<div class="leaflet-marker-emigrants">
+						<h5>The louder the sound, the faster the pulse.</h5>
+						<div class="pulse-explain">
+							<div class="quiet-flash">
+								<h6>Quieter</h6>
+								<img src="img/slow.gif">
+							</div>
+							<div class="loud-flash">
+								<h6>Louder</h6>
+								<img width="74px" height="61px"src="img/fast.gif">
+							</div>
+						</div>
+					</div>
+					<div class="leaflet-marker-move">
+						<h5>Move the marker around the map to experience different sounds</h5>
+						<img src="img/marker-opt.gif">
+					</div>
+					<div class="leaflet-lines-gradient">
+						<h5>The line connecting your marker to the sensor shows the relative sound volume.</h5>
+						<p>Yellow: relative volume is higher.</p>
+						<p>Green: relative volume is lower.</p>
+						<p>No line: this sensor isn't playing.</p>
+						<img src="img/lines-opt.gif">
+					</div>
+					<hr>
+				</div>
+				<div class="year-checkboxes">
+					<h5>Choose sensor years on the map. </h5>
+					<div class="form-group form-check-inline">
+						<input type="checkbox" data-year="2016" class="form-check-input" id="2016-check">
+						<label class="form-check-label" for="2016-check">2016</label>
+					</div>
+					<div class="form-group form-check-inline">
+						<input type="checkbox" data-year="2017" class="form-check-input" id="2017-check">
+						<label class="form-check-label" for="2017-check">2017</label>
+					</div>
+					<div class="form-group form-check-inline">
+						<input type="checkbox" data-year="2018" class="form-check-input" id="2018-check">
+						<label class="form-check-label" for="2018-check">2018</label>
+					</div>
+					<div class="form-group form-check-inline active">
+						<input type="checkbox" checked data-year="2019" class="form-check-input" id="2019-check">
+						<label class="form-check-label" for="2019-check">2019</label>
+					</div>
+				</div>
+				 
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary disabled entry-button" onclick="lets_go();" disabled="disabled" data-dismiss="modal">Data Loading...</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
 	<script type="text/javascript" src="js/drawsensors.js"></script>
 </body>
 </html>
