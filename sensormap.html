@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>USA Hearing Disability Map</title>
+	<title>SONYC Sensor Map</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
@@ -21,14 +21,18 @@
 	
 </head>
 <body>
-	<nav class="navbar navbar-dark bg-dark">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">Sensor Map</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
 		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-			<div class="navbar-nav">
-			  <a class="nav-item nav-link" href="#">Help / Open Setup</a>
-			  <a class="nav-item nav-link" href="#">Pause all sounds</a>
-			</div>
+		  <div class="navbar-nav">
+			<a class="nav-item nav-link active" href="#">Map <span class="sr-only">(current)</span></a>
+			<a class="nav-item nav-link" onclick="setup_modal();" href="#">Setup / Help</a>
+		  </div>
 		</div>
-	</nav>
+	  </nav>
 	<div id="county-map"></div>
 	<div class="modal fade" id="information" tabindex="-1" role="dialog" aria-labelledby="informationTitle" aria-hidden="true">
 		<div class="modal-dialog" role="document">

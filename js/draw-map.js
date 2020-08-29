@@ -2,6 +2,9 @@ consistent_highlight = []
 var curr_age_group = "young";
 var map;
 var geojson;
+const STEEL = new Rainbow();
+STEEL.setNumberRange(0,30);
+STEEL.setSpectrum("#bed8ec", "#125ca4"); //https://vega.github.io/vega/docs/schemes/
 	//console.log(statesData)
   map = L.map('county-map').setView([40.995786, -77.585395], 6);
 
@@ -32,8 +35,8 @@ var geojson;
 	info.update = function (props) {
 		console.log(props)
 		this._div.innerHTML = (props ?
-			' <h4>'+props.NAME+'</h4><b></b><br />'+props.HEARINGDATA[curr_age_group]+'% presumed to have a hearing disability '
-			:  '<h4>Coronavirus Cases (Presumptive & Confirmed)</h4><br> Hover over a state to view the % prevalence of a hearing disability');
+			' <h4>'+props.NAME+'</h4><b></b><br />'+props.HEARINGDATA[curr_age_group]+' out of every 100 have a hearing disability '
+			:  '<h4>Hearing Disability Prevalence by Age Group & State</h4><br> Hover over a state to view the number of people out a 100 who suffer from a hearing disability.');
 	};
 
 	info.addTo(map);
@@ -41,35 +44,11 @@ var geojson;
 
 	// get color depending on population density value
 	function getColor(d) {
-		party = false
-		// return "#E51414"
-		console.log(d)
-		if(d > 8) {
-			return "#23415a"
-		} else if(d > 5) {
-			return "#2a4e6c"
-		} else if(d > 3) {
-			return "#315b7d"
-		} else if(d > 2) {
-			return "#386890"
-		} else if(d > 1) {
-			return "#3f75a2"
-		} else  {
-			return "#4682b4"
-		}
+
+		return "#"+STEEL.colourAt(d);
 		
 	}
 
-	function getColor_legend(d) {
-		console.log(d)
-		party = d
-		if(d == "Has Confirmed/Presumptive COVID-19") {
-			return "#E51414"
-		} 
-
-		return "#e5edda"
-		
-	}
 
 	function style(feature) {
 		return {
@@ -137,12 +116,14 @@ var geojson;
 
 
 	function redrawLayers(new_age) {
+		$("."+curr_age_group).removeClass("activeage");
 		curr_age_group = new_age;
 		geojson.removeFrom(map);
 		geojson = L.geoJson(hearingData, {
 			style: style,
 			onEachFeature: onEachFeature
 		}).addTo(map);
+		$("."+curr_age_group).addClass("activeage");
 	}
 	// L.geoJson(state_outlines, {
 	// 	style: s_style,
@@ -161,15 +142,15 @@ var geojson;
 	legend.onAdd = function (map) {
 
 		var div = L.DomUtil.create('div', 'info legend'),
-			grades = ["Has Confirmed/Presumptive COVID-19","No Confirmed/Presumptive Cases of COVID-19"],
+			grades = ["1%", "2%", "3%", "5%", "7%", "10%", "13%", "16%", "20%", "24%", "30%"],
 			labels = [],
 			from, to;
 
 		for (var i = 0; i < grades.length; i++) {
-			aff = grades[i]
-
+			aff = grades[i].replace("%", "");
+			
 			labels.push(
-				'<i style="background:' + getColor_legend(aff) + '"></i> ' +aff+
+				'<i style="background:' + getColor(aff) + '"></i> ' +aff+"%"+
 				(to ? '&ndash;': ''));
 		}
 
@@ -178,3 +159,19 @@ var geojson;
 	};
 
 	legend.addTo(map);
+
+	var ageSelector = L.control({position: 'bottomleft'});
+	ageSelector.onAdd = function () {
+		const div = L.DomUtil.create("div", "info left");
+		div.innerHTML = `
+		<h5>Select Age Group</h5>
+		<button class="old" onclick="redrawLayers('old');">65+</button>
+		<button class="mid" onclick="redrawLayers('mid');">45-65</button>
+		<button class="young activeage" onclick="redrawLayers('young');">18-44</button>`;
+		return div;
+	};
+	ageSelector.addTo(map);
+
+	$( document ).ready(() => {
+		$("#entry").modal("toggle");
+	});

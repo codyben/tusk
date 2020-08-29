@@ -17,6 +17,7 @@ const DISTANCE_COLOR = new Rainbow();
 const POLYLINES = [];
 const CURR_SOUNDS = [];
 var myMovingMarker;
+const pauseExceptions = new Set();
 const RUNNING_AUDIO = {};
 const HOST = "https://audio.codyben.me/audio/";
 var animation_interval_handle;
@@ -48,8 +49,16 @@ function lets_go() {
 	loadData(map);
 }
 
+function setup_modal() {
+	$("#entry").modal({
+		"backdrop": "static",
+
+	}).modal("show");
+}
+
 function play_audio(t) {
-	const wav_id = $(t).data("id");
+	const btn = $(t);
+	const wav_id = btn.data("id");
 	console.log(wav_id);
 	if(!(wav_id in AUDIO_OBJECTS)) {
 		// const mp3_url = "/00_000066.mp3";
@@ -58,11 +67,27 @@ function play_audio(t) {
 		AUDIO_OBJECTS[wav_id] = {"audio":new Audio(needed.audio), "meta": {"volume": needed.true_vol, "isPlaying": false}};
 	}
 	const curr_audio = AUDIO_OBJECTS[wav_id]["audio"];
-	curr_audio.volume = AUDIO_OBJECTS[wav_id]["meta"].volume
-	console.log(curr_audio);
-	curr_audio.addEventListener("canplay", function(){
-		this.play().catch((e)=>{console.warn("failed to play individual track.")});
-	});
+	if((curr_audio.duration > 0) && (!curr_audio.paused)) {
+		curr_audio.pause();
+		console.log("pausing");
+		btn.text("Paused");
+		pauseExceptions.delete(wav_id);
+	} else {
+		pauseExceptions.add(wav_id);
+		curr_audio.volume = AUDIO_OBJECTS[wav_id]["meta"].volume
+		console.log(curr_audio);
+		btn.text("Loading...");
+		console.log("try play");
+		if((curr_audio.paused) && (curr_audio.duration != 0)) { //if its paused, we know it already played at least once.
+			curr_audio.play().then(() => {btn.text("Playing");}).catch((e)=>{console.warn("failed to play individual track.")});
+			
+		}
+		// curr_audio.addEventListener("canplay", function(){
+		// 	this.play().catch((e)=>{console.warn("failed to play individual track.")});
+		// 	btn.text("Playing");
+		// });
+	}
+
 }
 // https://stackoverflow.com/questions/37115491/how-to-set-volume-of-audio-object
 function distance(lat1, lon1, lat2, lon2, unit) {
@@ -153,6 +178,7 @@ function createMarkers(data){
 			RELATIVE_VOLUME[name] = modified_db;
 		});
 	});
+	years.clear();
 }
 
 function loadData(map) {
@@ -160,10 +186,7 @@ function loadData(map) {
 		draggable: true
 		}).addTo(map);
 	const entrybtn = $(".entry-button");
-	$("#entry").modal({
-		"backdrop": "static",
-
-	}).modal("show");
+	setup_modal();
 	try{
 		const ls = window.localStorage.getItem("markerdata");
 		if(ls != "null") {
@@ -306,6 +329,9 @@ $( document ).ready(function(){
 				}
 
 				if(dist > 0.14 && (!curr_audio.paused || curr_audio.currentTime)) {
+					if(pauseExceptions.has(k)) {
+						return 1;
+					}
 					audio_meta.isPlaying = false;
 					// console.log("out of range");
 					if(!$(curr_audio).is(":animated")) {
@@ -328,7 +354,7 @@ $( document ).ready(function(){
 	// });
 	
 		// myMovingMarker.on('drag', get_audio_to_be_played);
-	animation_interval_handle = setInterval(get_audio_to_be_played, 75);
+	animation_interval_handle = setInterval(get_audio_to_be_played, 60);
 });
 $.each(years, function(){
 	const selector = $("#"+this+"-check");
